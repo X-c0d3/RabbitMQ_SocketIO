@@ -75,5 +75,5 @@ io.on('connection', (socket) => {
 });
 
 http.listen(process.env.PORT, () => {
-    console.log('Server start on http://127.0.0.1:3000');
+    console.log('Server start on http://127.0.0.1:' + process.env.PORT);
 });
