@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Socket IO RealTime Chat</title>
+    <script src='/socket.io/socket.io.js'></script>
+    <script src='https://code.jquery.com/jquery-1.11.1.js'></script>
+
+    <script src='http://www.flotcharts.org/flot/jquery.flot.js'></script>
+    <script src='http://www.flotcharts.org/flot/jquery.flot.pie.js'></script>
+
+
+    <script>
+        $(() => {
+            var socket = io();
+            let channel = 'chat message';
+            $('form').submit(() => {
+                socket.emit(channel, $('#m').val());
+                $('#m').val('');
+                return false;
+            });
+
+            var placeholder = $("#placeholder");
+            socket.on(channel, (msg) => {
+                //$('#messages').append($('<li>').text(msg));
+                $('#messages').text(msg);
+
+                var app = JSON.parse(msg);
+                var data = [{
+                        label: 'CPU',
+                        data: app.CPU,
+                    },
+                    {
+                        label: 'RAM',
+                        data: app.Ram
+                    },
+                ];
+
+                $.plot(placeholder, data, {
+                    series: {
+                        pie: {
+                            show: true
+                        }
+                    },
+                    legend: {
+                        show: false
+                    }
+                });
+            });
+
+
+
+
+
+
+        });
+    </script>
+</head>
+
+<body>
+    Socket IO RealTime Chat
+    <ul id="messages"></ul>
+    <form action="">
+        <input id="m" autocomplete="off" />
+        <button>Send</button>
+
+        <div id="placeholder" style="width:600px;height:300px"></div>
+    </form>
+</body>
+
+</html>
